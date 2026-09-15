@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import express from "express";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import multer from "multer";
@@ -64,6 +65,10 @@ if (!existingAdmin) {
 
 const app = express();
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+const allowedOrigin = process.env.CLIENT_ORIGIN;
+if (allowedOrigin) {
+  app.use(cors({ origin: allowedOrigin, credentials: true }));
+}
 app.use(express.json({ limit: "100kb" }));
 app.use(cookieParser());
 app.disable("x-powered-by");

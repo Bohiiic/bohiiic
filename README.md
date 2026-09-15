@@ -36,3 +36,21 @@ Unauthenticated requests cannot read movie metadata or video files. The client
 bundle still contains the login screen, which is required to let users sign in;
 the library itself is rendered only after the authenticated API session is
 validated.
+
+### GitHub Pages and custom domain
+
+GitHub Pages only runs the React/Vite frontend. It does **not** run the
+Express/SQLite API, store uploads, or execute Node.js. The included
+`.github/workflows/deploy-pages.yml` builds and deploys `dist` on every push to
+`main`, and `CNAME` maps the site to `bohiiic.tech`.
+
+To use login and movie uploads on the deployed domain, run the API on a
+separate HTTPS host and add a production API URL/proxy to the frontend. Do not
+put SQLite files, admin credentials, or uploaded movies in the GitHub Pages
+repository.
+
+Set the repository variable `VITE_API_URL` to the API origin (for example,
+`https://api.example.com`) before deploying. Set the API's `CLIENT_ORIGIN` to
+`https://bohiiic.tech`. Both hosts must use HTTPS because authentication uses
+cookies. If `VITE_API_URL` is not configured, the frontend intentionally shows
+an API-unavailable message rather than pretending that login or uploads work.

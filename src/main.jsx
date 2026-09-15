@@ -2,9 +2,27 @@ import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.scss";
 
+const apiBase = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+
+const mediaUrl = (url) => {
+  if (!url) return "";
+  return url.startsWith("http") ? url : `${apiBase}${url}`;
+};
+
 const api = async (url, options = {}) => {
-  const response = await fetch(url, { credentials: "include", ...options });
-  const data = response.status === 204 ? null : await response.json();
+  let response;
+  try {
+    response = await fetch(`${apiBase}${url}`, { credentials: "include", ...options });
+  } catch {
+    throw new Error("The Bohiiic backend is unavailable. Start the API server or configure its public URL.");
+  }
+  const contentType = response.headers.get("content-type") || "";
+  const data = response.status === 204
+    ? null
+    : contentType.includes("application/json")
+      ? await response.json()
+      : null;
+  if (!data && !response.ok) throw new Error(`Backend request failed (${response.status}).`);
   if (!response.ok) throw new Error(data?.error || "Request failed.");
   return data;
 };
@@ -35,12 +53,12 @@ function App() {
   useEffect(() => {
     api("/api/auth/me")
       .then((data) => { setUser(data.user); return api("/api/movies"); })
-      .then((data) => setMovies(data.movies))
+      .then((data) => setMovies(data.movies.map((movie) => ({ ...movie, url: mediaUrl(movie.url) }))))
       .catch((err) => { if (!err.message.includes("Authentication required")) setError(err.message); })
       .finally(() => setLoading(false));
   }, []);
   if (loading) return <main className="auth-shell"><p className="muted">Loading your library…</p></main>;
-  if (!user) return <><Login onLogin={(next) => { setUser(next); setError(""); api("/api/movies").then((data) => setMovies(data.movies)).catch((err) => { setUser(null); setError(err.message); }); }} />{error && <p className="error auth-error">{error}</p>}</>;
+  if (!user) return <><Login onLogin={(next) => { setUser(next); setError(""); api("/api/movies").then((data) => setMovies(data.movies.map((movie) => ({ ...movie, url: mediaUrl(movie.url) })))).catch((err) => { setUser(null); setError(err.message); }); }} />{error && <p className="error auth-error">{error}</p>}</>;
   const logout = () => api("/api/auth/logout").finally(() => setUser(null));
   const upload = async (event) => {
     event.preventDefault();
@@ -48,7 +66,7 @@ function App() {
     const form = new FormData(event.currentTarget);
     try {
       const data = await api("/api/movies", { method: "POST", body: form });
-      setMovies((current) => [{ ...data, url: data.url }, ...current]);
+      setMovies((current) => [{ ...data, url: mediaUrl(data.url) }, ...current]);
       event.currentTarget.reset();
     } catch (err) { setError(err.message); } finally { setUploading(false); }
   };
