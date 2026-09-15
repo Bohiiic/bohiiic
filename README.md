@@ -1,56 +1,92 @@
-## Bohiiic
+# Bohiiic
 
-Private movie library built with React, Vite, Express, SQLite, and secure
-HTTP-only sessions.
+Private movie library with a React/Vite frontend, Sass styling, Express API,
+and SQLite database.
 
-### Development
+## Features
+
+- React interface for the private movie library
+- Admin-only movie uploads and deletion
+- Authenticated video streaming
+- SQLite persistence for users and movies
+- bcrypt password hashing
+- HTTP-only signed session cookies
+- Login rate limiting and security headers
+- MP4, WebM, and MOV upload support
+
+## Local setup
 
 ```bash
 npm install
 cp .env.example .env
-# Replace JWT_SECRET and ADMIN_PASSWORD with your own values.
+```
+
+Edit `.env` before starting the server:
+
+```env
+JWT_SECRET=replace-with-a-long-random-secret-at-least-32-characters
+ADMIN_USERNAME=bohiiic
+ADMIN_PASSWORD=choose-a-password-at-least-12-characters-long
+```
+
+The application intentionally does not commit admin passwords to GitHub.
+`ADMIN_USERNAME` defaults to `bohiiic`, and the first admin account is created
+from the environment variables when the API starts. The current security
+policy requires an admin password with at least 12 characters, so
+`986532op` cannot be used as-is; use a longer version instead.
+
+Start the development frontend and API:
+
+```bash
 npm run dev
 ```
 
-Open <http://localhost:5173>. The admin account is created on first server
-start from `ADMIN_USERNAME` and `ADMIN_PASSWORD`; change those values before
-deploying. Uploaded movies are stored outside the public client bundle.
+Open <http://localhost:5173>.
 
-### Stack
+## Production
 
-- React and Vite for the client
-- Sass (`src/styles.scss`) for the UI
-- Express for the API
-- SQLite for SQL persistence
-- bcrypt password hashing and signed, HTTP-only sessions
-- Helmet security headers and login rate limiting
+Build the frontend:
 
-### Production notes
+```bash
+npm run build
+```
 
-Set a unique `JWT_SECRET`, a strong admin password, HTTPS, and a reverse proxy
-before exposing this server to the internet. The server validates upload types,
-limits upload size, stores generated filenames, and keeps the upload directory
-behind authentication.
+Start the API:
 
-Unauthenticated requests cannot read movie metadata or video files. The client
-bundle still contains the login screen, which is required to let users sign in;
-the library itself is rendered only after the authenticated API session is
-validated.
+```bash
+NODE_ENV=production \
+COOKIE_SECURE=true \
+JWT_SECRET='your-long-random-secret' \
+ADMIN_USERNAME='bohiiic' \
+ADMIN_PASSWORD='your-strong-admin-password' \
+npm start
+```
 
-### GitHub Pages and custom domain
+Use HTTPS in production. Keep `data/`, `uploads/`, and `.env` on the API
+server; do not publish them through GitHub Pages or commit them to Git.
 
-GitHub Pages only runs the React/Vite frontend. It does **not** run the
-Express/SQLite API, store uploads, or execute Node.js. The included
-`.github/workflows/deploy-pages.yml` builds and deploys `dist` on every push to
-`main`, and `CNAME` maps the site to `bohiiic.tech`.
+## GitHub Pages
 
-To use login and movie uploads on the deployed domain, run the API on a
-separate HTTPS host and add a production API URL/proxy to the frontend. Do not
-put SQLite files, admin credentials, or uploaded movies in the GitHub Pages
-repository.
+GitHub Pages can host the built React frontend, but it cannot run the
+Express/SQLite backend. Host the API separately over HTTPS and configure the
+GitHub repository variable `VITE_API_URL` with its public origin, for example:
 
-Set the repository variable `VITE_API_URL` to the API origin (for example,
-`https://api.example.com`) before deploying. Set the API's `CLIENT_ORIGIN` to
-`https://bohiiic.tech`. Both hosts must use HTTPS because authentication uses
-cookies. If `VITE_API_URL` is not configured, the frontend intentionally shows
-an API-unavailable message rather than pretending that login or uploads work.
+```text
+https://api.example.com
+```
+
+Set the API's `CLIENT_ORIGIN` to:
+
+```text
+https://bohiiic.tech
+```
+
+The included Pages workflow builds `dist/` and preserves the custom domain in
+`CNAME`.
+
+## Validation
+
+```bash
+npm run build
+npm audit --omit=dev --audit-level=moderate
+```
