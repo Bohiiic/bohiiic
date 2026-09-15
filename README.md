@@ -84,6 +84,11 @@ https://bohiiic.tech
 The included Pages workflow builds `dist/` and preserves the custom domain in
 `CNAME`.
 
+If the repository is configured to publish the `main` branch root instead of
+GitHub Actions, the root page redirects to the committed `dist/` fallback.
+Prefer setting **Settings → Pages → Source → GitHub Actions** so the workflow
+builds a fresh artifact on every push.
+
 ## Validation
 
 ```bash

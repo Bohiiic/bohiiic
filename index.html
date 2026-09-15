@@ -8,6 +8,16 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      const local = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+      if (local) {
+        document.write('<script type="module" src="/src/main.jsx"><\/script>');
+      } else {
+        window.location.replace("./dist/");
+      }
+    </script>
+    <noscript>
+      <p><a href="./dist/">Open Bohiiic</a></p>
+    </noscript>
   </body>
 </html>

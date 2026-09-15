@@ -7,7 +7,7 @@
     "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
     "dev:server": "node --watch server/index.js",
     "dev:client": "vite",
-    "build": "vite build",
+    "build": "vite build && mv dist/app.html dist/index.html",
     "start": "node server/index.js"
   },
   "dependencies": {
