@@ -20,11 +20,15 @@ fs.mkdirSync(dataDir, { recursive: true });
 fs.mkdirSync(uploadDir, { recursive: true });
 
 const port = Number(process.env.PORT || 3000);
-const jwtSecret = process.env.JWT_SECRET;
-if (!jwtSecret || jwtSecret.length < 32) {
-  throw new Error("JWT_SECRET must be set in .env and be at least 32 characters long. Copy .env.example to .env.");
-}
 const isProduction = process.env.NODE_ENV === "production";
+let jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret || jwtSecret.length < 32) {
+  if (isProduction) {
+    throw new Error("JWT_SECRET must be set in .env and be at least 32 characters long. Copy .env.example to .env.");
+  }
+  jwtSecret = crypto.randomBytes(48).toString("hex");
+  console.warn("JWT_SECRET is missing or too short; using an in-memory development secret for this run.");
+}
 const secureCookies = process.env.COOKIE_SECURE === "true";
 if (isProduction && !secureCookies) {
   throw new Error("COOKIE_SECURE=true is required when NODE_ENV=production.");
@@ -53,12 +57,12 @@ db.exec(`
 `);
 
 const adminUsername = process.env.ADMIN_USERNAME || "Admin";
-const adminPassword = process.env.ADMIN_PASSWORD;
-if (!adminPassword || adminPassword.length < 12) {
-  throw new Error("ADMIN_PASSWORD must be set in .env and be at least 12 characters long.");
-}
 const existingAdmin = db.prepare("SELECT id FROM users WHERE username = ?").get(adminUsername);
 if (!existingAdmin) {
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminPassword || adminPassword.length < 12) {
+    throw new Error("ADMIN_PASSWORD must be set in .env and be at least 12 characters long.");
+  }
   db.prepare("INSERT INTO users (username, password_hash, role) VALUES (?, ?, 'admin')")
     .run(adminUsername, bcrypt.hashSync(adminPassword, 12));
 }
@@ -207,4 +211,43 @@ app.use((error, _req, res, _next) => {
   res.status(500).json({ error: "Unexpected server error." });
 });
 
-app.listen(port, () => console.log(`Bohiiic is running at http://localhost:${port}`));
+const server = app.listen(port, () => console.log(`Bohiiic is running at http://localhost:${port}`));
+
+server.on("error", (error) => {
+  if (error?.code === "EADDRINUSE") {
+    console.error(`Port ${port} is already in use. Stop the other process or set a different PORT.`);
+    process.exit(1);
+  }
+  if (error?.code === "EACCES") {
+    console.error(`Insufficient privileges to bind to port ${port}.`);
+    process.exit(1);
+  }
+  throw error;
+});
+
+let isShuttingDown = false;
+function shutdown(signal) {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  console.log(`Received ${signal}. Shutting down...`);
+  server.close((serverError) => {
+    if (serverError) {
+      console.error("Error while closing HTTP server:", serverError);
+      process.exitCode = 1;
+    }
+    try {
+      db.close();
+    } catch (dbError) {
+      console.error("Error while closing database:", dbError);
+      process.exitCode = 1;
+    }
+    process.exit();
+  });
+  setTimeout(() => {
+    console.error("Force exiting after shutdown timeout.");
+    process.exit(1);
+  }, 10_000).unref();
+}
+
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
