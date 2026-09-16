@@ -26,7 +26,7 @@ Edit `.env` before starting the server:
 ```env
 JWT_SECRET=replace-with-a-long-random-secret-at-least-32-characters
 ADMIN_USERNAME=bohiiic
-ADMIN_PASSWORD=choose-a-password-at-least-12-characters-long
+ADMIN_PASSWORD=bohiiicbohiiic
 ```
 
 The application intentionally does not commit admin passwords to GitHub.
@@ -64,7 +64,7 @@ NODE_ENV=production \
 COOKIE_SECURE=true \
 JWT_SECRET='your-long-random-secret' \
 ADMIN_USERNAME='bohiiic' \
-ADMIN_PASSWORD='your-strong-admin-password' \
+ADMIN_PASSWORD='bohiiicbohiiic' \
 npm start
 ```
 
