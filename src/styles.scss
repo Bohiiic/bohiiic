@@ -1,14 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
 
-$purple: #9767ff;
-$purple-dark: #6d4bd9;
-$panel: #172334;
-$muted: #8591a8;
+$purple: #45c2c9;
+$purple-dark: #2ea7af;
+$panel: #133640;
+$muted: #9fc2c8;
 
 :root {
   font-family: "DM Sans", sans-serif;
-  color: #edf2ff;
-  background: #101827;
+  color: #edfdfd;
+  background: #102831;
   font-synthesis: none;
 }
 
@@ -18,7 +18,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: radial-gradient(circle at 20% 5%, #29334f 0, #111b2a 38%, #0d1522 100%);
+  background: radial-gradient(circle at 20% 5%, #3f8a95 0, #1d4f5b 38%, #14333b 100%);
 }
 
 button, input { font: inherit; }
@@ -32,8 +32,8 @@ nav {
   align-items: center;
   gap: 70px;
   padding: 0 clamp(24px, 8vw, 120px);
-  border-bottom: 1px solid #273349;
-  background: #121c2b99;
+  border-bottom: 1px solid #2f5964;
+  background: #14333f99;
 }
 
 .brand {
@@ -42,7 +42,7 @@ nav {
   font-weight: 700;
   white-space: nowrap;
 
-  &-mark { color: #a971ff; margin-right: 7px; }
+  &-mark { color: #73dce2; margin-right: 7px; }
 }
 
 .nav-links {
@@ -50,7 +50,7 @@ nav {
   gap: 35px;
   flex: 1;
 
-  a, .account button { color: #9da8ba; font-size: 13px; }
+  a, .account button { color: #a7c6cb; font-size: 13px; }
   .active { color: white; }
 }
 
@@ -59,7 +59,7 @@ nav {
   align-items: center;
   gap: 20px;
 
-  button { color: #9da8ba; background: none; }
+  button { color: #a7c6cb; background: none; }
 }
 
 .content {
@@ -79,12 +79,12 @@ nav {
     font: 600 clamp(36px, 5vw, 62px) / 1.05 "Space Grotesk";
   }
 
-  h1 span { color: #9b6cff; }
+  h1 span { color: #83dce2; }
 }
 
 .eyebrow {
   margin: 0 0 15px;
-  color: #a477ff;
+  color: #7dd8dd;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -97,13 +97,13 @@ nav {
   height: 115px;
   display: grid;
   place-content: center;
-  border: 1px solid #8b62fa;
+  border: 1px solid #63c9d0;
   border-radius: 50%;
   text-align: center;
-  box-shadow: 0 0 30px #7b52dc44;
+  box-shadow: 0 0 30px #3aa9b144;
 
   b { font: 22px "Space Grotesk"; }
-  small { color: #8490a6; font-size: 9px; letter-spacing: 1px; }
+  small { color: #a4c3c9; font-size: 9px; letter-spacing: 1px; }
 }
 
 .section-head {
@@ -119,14 +119,14 @@ nav {
   }
 }
 
-.count { color: #68768c; font-size: 12px; margin-left: 14px; }
+.count { color: #85a8af; font-size: 12px; margin-left: 14px; }
 
 .primary {
   padding: 12px 20px;
   color: white;
-  background: linear-gradient(135deg, #a16aff, #7650e8);
+  background: linear-gradient(135deg, #69d8de, #3caeb5);
   border-radius: 8px;
-  box-shadow: 0 7px 20px #7044c433;
+  box-shadow: 0 7px 20px #238d9540;
   font-weight: 600;
 
   &:disabled { cursor: wait; opacity: .65; }
@@ -143,18 +143,18 @@ nav {
 .movie-card {
   overflow: hidden;
   background: $panel;
-  border: 1px solid #25354a;
+  border: 1px solid #2c5c68;
   border-radius: 12px;
   cursor: pointer;
   transition: .2s;
 
-  &:hover { transform: translateY(-4px); border-color: #8055e4; }
+  &:hover { transform: translateY(-4px); border-color: #4ec3ca; }
 }
 
 .poster {
   height: 180px;
   position: relative;
-  background: #25324a;
+  background: #24515d;
 
   video { width: 100%; height: 100%; object-fit: cover; opacity: .8; }
 }
@@ -179,12 +179,12 @@ nav {
   padding: 16px;
 
   h3 { margin: 0 0 7px; font: 600 17px "Space Grotesk"; }
-  p { min-height: 18px; margin: 0; color: #8490a4; font-size: 12px; }
+  p { min-height: 18px; margin: 0; color: #a4c2c8; font-size: 12px; }
 }
 
 .delete {
   padding: 10px 0 0;
-  color: #eb718e;
+  color: #f38da6;
   background: none;
   font-size: 12px;
 }
@@ -192,13 +192,13 @@ nav {
 .empty, .upload-card {
   padding: 50px;
   background: $panel;
-  border: 1px solid #27364b;
+  border: 1px solid #2f6170;
   border-radius: 14px;
   text-align: center;
 }
 
 .empty {
-  span { color: #9b6cff; font-size: 32px; }
+  span { color: #74dae0; font-size: 32px; }
   h2 { margin: 15px 0 0; font: 600 24px "Space Grotesk"; }
 }
 
@@ -217,8 +217,8 @@ nav {
   input {
     padding: 13px;
     color: white;
-    background: #0f1928;
-    border: 1px solid #30415a;
+    background: #112a35;
+    border: 1px solid #336471;
     border-radius: 7px;
     outline: none;
 
@@ -239,19 +239,19 @@ nav {
 .auth-card {
   width: min(410px, 100%);
   padding: 44px;
-  background: #172334dd;
-  border: 1px solid #2b3a53;
+  background: #143540dd;
+  border: 1px solid #2f6371;
   border-radius: 15px;
   box-shadow: 0 25px 80px #0005;
 
   h1 { margin-top: 5px; font-size: 42px; }
   form { display: grid; gap: 15px; margin-top: 30px; }
-  label { display: grid; gap: 7px; color: #a9b3c5; font-size: 12px; }
+  label { display: grid; gap: 7px; color: #b2d2d7; font-size: 12px; }
   input {
     padding: 13px;
     color: white;
-    background: #0f1928;
-    border: 1px solid #30415a;
+    background: #112a35;
+    border: 1px solid #336471;
     border-radius: 7px;
     outline: none;
 
@@ -266,7 +266,7 @@ nav {
   display: grid;
   place-items: center;
   padding: 25px;
-  background: #08101bd9;
+  background: #0e2932db;
 }
 
 .player-modal {
@@ -274,7 +274,7 @@ nav {
   position: relative;
   padding: 20px;
   background: $panel;
-  border: 1px solid #354866;
+  border: 1px solid #3d7280;
   border-radius: 14px;
 
   video { width: 100%; max-height: 70vh; background: #000; }
@@ -290,7 +290,7 @@ nav {
   width: 30px;
   height: 30px;
   color: white;
-  background: #273750;
+  background: #2f5f6d;
   border-radius: 50%;
   font-size: 20px;
 }
