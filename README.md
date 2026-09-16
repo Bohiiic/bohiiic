@@ -81,6 +81,9 @@ GitHub repository variable `VITE_API_URL` with its public origin, for example:
 https://api.example.com
 ```
 
+For this project, set `VITE_API_URL` to your real backend URL (for example a
+Render service URL) in **Settings → Secrets and variables → Actions → Variables**.
+
 Set the API's `CLIENT_ORIGIN` to:
 
 ```text
@@ -89,6 +92,17 @@ https://bohiiic.tech
 
 The included Pages workflow builds `dist/` and preserves the custom domain in
 `CNAME`.
+
+### Automatic backend deploy from GitHub
+
+GitHub cannot keep the Express server running by itself. To keep your backend
+running, host it on a platform like Render/Railway/Fly and trigger deploys
+automatically from GitHub Actions.
+
+1. Create a backend web service on your host.
+2. Copy the host's deploy hook URL.
+3. Add GitHub repository secret `BACKEND_DEPLOY_HOOK` with that URL.
+4. Push to `main`; the workflow below will call the hook and redeploy backend.
 
 If the repository is configured to publish the `main` branch root instead of
 GitHub Actions, the root page redirects to the committed `dist/` fallback.

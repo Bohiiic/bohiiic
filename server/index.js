@@ -56,7 +56,7 @@ db.exec(`
   );
 `);
 
-const adminUsername = process.env.ADMIN_USERNAME || "Admin";
+const adminUsername = process.env.ADMIN_USERNAME || "bohiiic";
 const existingAdmin = db.prepare("SELECT id FROM users WHERE username = ?").get(adminUsername);
 if (!existingAdmin) {
   const adminPassword = process.env.ADMIN_PASSWORD;
