@@ -22,7 +22,12 @@ const api = async (url, options = {}) => {
     : contentType.includes("application/json")
       ? await response.json()
       : null;
-  if (!data && !response.ok) throw new Error(`Backend request failed (${response.status}).`);
+  if (!data && !response.ok) {
+    if (response.status === 404 && url.startsWith("/api/")) {
+      throw new Error("Backend API returned 404. Configure VITE_API_URL to your backend origin.");
+    }
+    throw new Error(`Backend request failed (${response.status}).`);
+  }
   if (!response.ok) throw new Error(data?.error || "Request failed.");
   return data;
 };
