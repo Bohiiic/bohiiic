@@ -34,6 +34,12 @@ The application intentionally does not commit admin passwords to GitHub.
 from the environment variables when the API starts. The current security
 policy requires an admin password with at least 12 characters, so
 `986532op` cannot be used as-is; use a longer version instead.
+After the first admin account exists, restarts do not require
+`ADMIN_PASSWORD` again unless you create a new admin username.
+
+If `JWT_SECRET` is missing in local development, the API will generate a
+temporary in-memory secret so startup still succeeds (existing sessions will be
+invalidated on restart). In production, `JWT_SECRET` is always required.
 
 Start the development frontend and API:
 
