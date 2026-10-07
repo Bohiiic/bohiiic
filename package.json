@@ -4,11 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
-    "dev:server": "node --watch server/index.js",
-    "dev:client": "vite",
+    "dev": "vite",
     "build": "vite build && mv dist/app.html dist/index.html",
-    "start": "node server/index.js"
+    "start": "vite preview"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -21,13 +19,9 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.4.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "sass": "^1.83.4"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "concurrently": "^9.1.2",
     "vite": "^6.0.7"
   }
 }
